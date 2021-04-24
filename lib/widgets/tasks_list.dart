@@ -1,42 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:fd14/widgets/task_tile.dart';
-import 'package:fd14/models/task.dart';
+import 'package:fd14/models/task_data.dart';
 
-class TasksList extends StatefulWidget {
-//create tasks property, so it can be passed over
-  final List<Task> tasks;
-  TasksList(this.tasks);
-
-  @override
-  _TasksListState createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
+class TasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return ListView(
-    //   children: <Widget>[
-    //     TaskTile(taskTile: tasks[0].name, isChecked: tasks[0].isDone),
-    //     TaskTile(taskTile: tasks[1].name, isChecked: tasks[1].isDone),
-    //     TaskTile(taskTile: tasks[2].name, isChecked: tasks[2].isDone),
-    // ],
-    // );
-
-    //using ListView Builder for dynamic build
-    return ListView.builder(
-        itemBuilder: (context, index) {
-          return TaskTile(
-            //widget refers to Stateful W (getting the property of tasks)
-            taskTitle: widget.tasks[index].name,
-            isChecked: widget.tasks[index].isDone,
-
-            checkboxCallback: (checkboxState) {
-              setState(() {
-                widget.tasks[index].toggleDone();
-              });
-            },
-          );
-        },
-        itemCount: widget.tasks.length);
+    // using Consumer W (from Provider Package) to wrap ListView, so don't need to repeat code "Provider.of<TaskData>(context).tasks"
+return Consumer<TaskData>(
+      builder: (context, taskData, child) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final task = taskData.tasks[index];
+            return TaskTile(
+              taskTitle: task.name,
+              isChecked: task.isDone,
+              checkboxCallback: (checkboxState) {
+                taskData.updateTask(task);
+              },
+              longPressCallback: () {
+                taskData.deleteTask(task);
+              },
+            );
+          },
+          itemCount: taskData.taskCount,
+        );
+      },
+    );
   }
 }
+
+//using ListView Builder for dynamic build
+// return ListView.builder(
+//     itemBuilder: (context, index) {
+//       return TaskTile(
+//         taskTitle: Provider.of<TaskData>(context).tasks[index].name,
+//         isChecked: Provider.of<TaskData>(context).tasks[index].isDone,
+
+//         checkboxCallback: (checkboxState) {
+//           // setState(() {
+//           //   widget.tasks[index].toggleDone();
+//           // });
+//         },
+//       );
+//     },
+//     itemCount: Provider.of<TaskData>(context).tasks.length);

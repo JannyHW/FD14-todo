@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// import 'package:fd14/models/task.dart';
+import 'package:fd14/models/task_data.dart';
 
-//why stateless?
+
 class AddTaskScreen extends StatelessWidget {
-  final Function addTaskCallback;
-  AddTaskScreen(this.addTaskCallback);
-
   @override
   Widget build(BuildContext context) {
-    //using onPressed(FlatBitton) to pass data of newTaskTitle from onChanged(TextField) to differnt places
     String newTaskTitle;
 
     return Container(
@@ -29,14 +28,15 @@ class AddTaskScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
-                  color: Colors.lightBlueAccent,
+                  color: Color(0xFF3700B3),
                 ),
               ),
               TextField(
-                autofocus: true,
+                // autofocus: true,
                 textAlign: TextAlign.center,
                 onChanged: (newText) {
-                  newTaskTitle = newText;// *step 1: users type data(newTaskTile)
+                  newTaskTitle =
+                      newText; // *step 1: users type data(newTaskTile)
                 },
               ),
               FlatButton(
@@ -44,9 +44,13 @@ class AddTaskScreen extends StatelessWidget {
                   'Add',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.lightBlueAccent,
-                onPressed: () {
-                  addTaskCallback(newTaskTitle);// *step 2 : users put Add Btn
+                color: Color(0xFF3700B3),
+                 onPressed: () {
+                   //addTask() from task_data.dart
+                Provider.of<TaskData>(context, listen: false).addTask(newTaskTitle);
+                Navigator.pop(context);
+
+                  // addTaskCallback(newTaskTitle);// *step 2 : users put Add Btn
                 },
               ),
             ]),
