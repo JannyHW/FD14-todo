@@ -17,7 +17,7 @@ class TasksScreen extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
                 context: context,
-                // isScrollControlled: true,
+                isScrollControlled: true,
                 builder: (context) => SingleChildScrollView(
                     child:Container(
                       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
